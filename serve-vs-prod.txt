@@ -1,0 +1,26 @@
+app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=True,
+        use_reloader=True
+    ) 
+
+    for dev 
+
+    if __name__ == '__main__':
+    # Serve using Waitress for production
+    serve(app, host="127.0.0.1", port=5000) 
+
+    for prod
+
+in xampp http.conf
+uncomment 
+
+LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule headers_module modules/mod_headers.so
+
+# Proxy configuration for Herbicide Prediction Model
+ProxyPass /herb-pred http://127.0.0.1:5000/herb-pred
+ProxyPassReverse /herb-pred http://127.0.0.1:5000/herb-pred

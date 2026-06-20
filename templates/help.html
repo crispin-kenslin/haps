@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set active_page = 'help' %}
+
+{% block title %}Help - TNAU Herbicide Predictor{% endblock %}
+
+{% block extra_head %}
+<style>
+    .help-section {
+        margin-bottom: 1.75rem;
+    }
+    .help-section h3 {
+        color: var(--primary);
+        margin-bottom: 0.4rem;
+        font-size: 1rem;
+    }
+    ul {
+        padding-left: 1.5rem;
+        color: var(--text-secondary);
+    }
+    li {
+        margin-bottom: 0.4rem;
+    }
+    li strong {
+        color: var(--text);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>How to Use the Model</h1>
+    <p>A quick guide to performing herbicide predictions</p>
+</header>
+
+<div class="card">
+    <div class="help-section">
+        <h3>Single Prediction using Molecule Editor</h3>
+        <ul>
+            <li>Use the <strong>Draw Molecule</strong> panel (Ketcher) on the Home page to draw your chemical structure.</li>
+            <li>Once drawn, click <strong>Transfer to Input →</strong>. This converts your drawing into a SMILES string.</li>
+            <li>Click <strong>Run Prediction</strong>.</li>
+            <li>The model will display the prediction, confidence score, explanation charts, and molecular properties.</li>
+        </ul>
+    </div>
+
+    <div class="help-section">
+        <h3>Single Prediction using SMILES</h3>
+        <ul>
+            <li>Paste a SMILES string into the <strong>SMILES Identifier</strong> text box.</li>
+            <li>Click <strong>Run Prediction</strong> or press <strong>Enter</strong>.</li>
+        </ul>
+    </div>
+
+    <div class="help-section">
+        <h3>PubChem CID Lookup</h3>
+        <ul>
+            <li>Enter a <strong>PubChem Compound ID (CID)</strong> in the lookup section and click <strong>Fetch &amp; Predict</strong>.</li>
+            <li>The SMILES will be retrieved from PubChem, filled in automatically, and the prediction will run immediately.</li>
+            <li>Find CIDs at <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" style="color: var(--primary);">pubchem.ncbi.nlm.nih.gov</a>.</li>
+        </ul>
+    </div>
+
+    <div class="help-section">
+        <h3>Batch Prediction</h3>
+        <ul>
+            <li>Switch to the <strong>Batch Prediction</strong> tab.</li>
+            <li>Paste SMILES strings, <strong>one per line</strong>.</li>
+            <li>Click <strong>Run Batch Prediction</strong>.</li>
+            <li>Download results as CSV using the <strong>Download CSV</strong> button.</li>
+        </ul>
+    </div>
+
+    <div class="help-section">
+        <h3>Understanding the Results</h3>
+        <ul>
+            <li><strong>Feature Contributions</strong> — Shows which MACCS structural keys had the most impact. Green bars indicate features pushing toward "Herbicide".</li>
+            <li><strong>Structural Features Overview</strong> — Donut chart showing how many selected MACCS keys are present vs. absent. Tags below list top active features.</li>
+            <li><strong>Molecular Properties Profile</strong> — Radar chart of key descriptors (molecular weight, LogP, H-bond donors/acceptors, TPSA, rotatable bonds).</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

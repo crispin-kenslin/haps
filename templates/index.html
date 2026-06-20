@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% set active_page = 'home' %}
+
+{% block title %}Herbicidal Activity Classification Model{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="description" content="AI-powered herbicidal activity classification of chemical compounds using MACCS fingerprints and SVM machine learning.">
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>Herbicidal Activity Classification Model using Machine Learning</h1>
+    <p>Classify chemical compounds using MACCS structural fingerprints and SVM</p>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('single')">Single Prediction</button>
+    <button class="tab-btn" onclick="switchTab('batch')">Batch Prediction</button>
+</div>
+
+<!-- Single Prediction Tab -->
+<div id="tab-single" class="tab-content active">
+    <div class="card">
+        <div class="flex-row">
+            <!-- Molecule Editor -->
+            <div class="flex-col">
+                <label>Draw Molecule</label>
+                <div class="editor-wrapper">
+                    <iframe id="ketcher-frame" src="{{ url_for('static', filename='ketcher/index.html') }}"></iframe>
+                </div>
+                <button class="btn-secondary" style="margin-top: 0.75rem; width: 100%;" onclick="getSmiles()">
+                    Transfer to Input &rarr;
+                </button>
+            </div>
+
+            <!-- Input Panel -->
+            <div class="flex-col">
+                <div class="input-panel">
+                    <div class="form-group">
+                        <label for="smiles-input">Enter the SMILES Identifier of the compound</label>
+                        <input type="text" id="smiles-input" placeholder="e.g. C1=CC=C(C=C1)C2=CC=NN2C">
+                    </div>
+
+                    <!-- PubChem Lookup -->
+                    <div class="pubchem-section">
+                        <div class="section-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            Fetch SMILES from PubChem by CID
+                        </div>
+                        <div class="pubchem-input-row">
+                            <input type="number" id="pubchem-cid" placeholder="Enter CID (e.g. 2244)">
+                            <button class="btn-accent" onclick="lookupAndPredict()">Fetch &amp; Predict</button>
+                        </div>
+                        <div id="pubchem-result" class="pubchem-result">
+                            <div class="compound-name" id="pubchem-name"></div>
+                            <div class="compound-formula" id="pubchem-formula"></div>
+                            <div class="compound-smiles" id="pubchem-smiles"></div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="predictSingle()">Run Prediction</button>
+
+                    <div id="loading-single" class="loading">
+                        <div class="spinner"></div>
+                        Analyzing compound…
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div id="result-single" style="display: none;">
+        <div class="prediction-header">
+            <div id="pred-badge" class="result-badge herbicide">Herbicide</div>
+            <div class="confidence-meter">
+                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Confidence</span>
+                <div class="confidence-bar-track">
+                    <div class="confidence-bar-fill" id="confidence-bar" style="width: 0%"></div>
+                </div>
+                <span class="confidence-value" id="pred-conf">0%</span>
+            </div>
+        </div>
+
+        <div class="properties-grid" id="properties-grid"></div>
+
+        <div class="explanation-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Feature Contributions (Top 15)</div>
+                <div class="chart-container bar-chart">
+                    <canvas id="contributionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card-title">Structural Features Overview</div>
+                <div class="chart-container donut-chart">
+                    <canvas id="presenceChart"></canvas>
+                </div>
+                <div id="feature-pills" class="feature-list"></div>
+            </div>
+        </div>
+
+        <div class="chart-card" style="max-width: 520px; margin: 0 auto 1.5rem;">
+            <div class="chart-card-title">Molecular Properties Profile</div>
+            <div class="chart-container radar-chart">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Batch Prediction Tab -->
+<div id="tab-batch" class="tab-content">
+    <div class="card">
+        <div class="form-group">
+            <label for="batch-input">Enter Multiple SMILES (one per line)</label>
+            <textarea id="batch-input" placeholder="CCO&#10;c1ccccc1&#10;CC(=O)O"></textarea>
+        </div>
+        <button class="btn-primary" onclick="predictBatch()">Run Batch Prediction</button>
+
+        <div id="loading-batch" class="loading">
+            <div class="spinner"></div>
+            Processing batch…
+        </div>
+
+        <div id="result-batch" style="display: none; margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="margin:0; color: var(--text); font-size: 1rem;">Batch Results</h3>
+                <button class="btn-secondary" onclick="downloadCSV()">Download CSV</button>
+            </div>
+            <div class="table-container">
+                <table id="batch-table">
+                    <thead>
+                        <tr>
+                            <th>SMILES</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>MW</th>
+                            <th>LogP</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}

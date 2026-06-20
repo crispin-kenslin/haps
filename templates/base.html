@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Herbicide Classifier{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/TNAU-Logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='images/TNAU-Logo.png') }}" alt="TNAU Logo">
+            <span>Herbicide Classifier</span>
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a>
+            <a href="{{ url_for('keys') }}" class="{% if active_page == 'keys' %}active{% endif %}">MACCS Keys</a>
+            <a href="{{ url_for('help_page') }}" class="{% if active_page == 'help' %}active{% endif %}">Help</a>
+            <a href="{{ url_for('about') }}" class="{% if active_page == 'about' %}active{% endif %}">About</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h4>Institution</h4>
+                <a href="https://tnau.ac.in" target="_blank" rel="noopener">Tamil Nadu Agricultural University</a>
+                <a href="https://tnau.ac.in/site/cpmb/about-bioinformatics/" target="_blank" rel="noopener">Dept. of
+                    Plant Molecular Biology &amp; Bioinformatics</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener">PubChem</a>
+                <a href="https://www.rdkit.org" target="_blank" rel="noopener">RDKit</a>
+            </div>
+            <div class="footer-col">
+                <h4>Project</h4>
+                <a href="{{ url_for('help_page') }}">How to Use</a>
+                <a href="{{ url_for('about') }}">About &amp; Credits</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 TNAU &mdash; Herbicidal Activity Classification Model
+        </div>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

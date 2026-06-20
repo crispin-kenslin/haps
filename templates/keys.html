@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set active_page = 'keys' %}
+
+{% block title %}MACCS Keys Directory{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/keys.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <header class="page-header">
+        <h1>MACCS 166-Bit Molecular Fingerprints</h1>
+        <p>
+            A standardized cheminformatics descriptor system used to encode molecular structure into binary features
+            for machine learning and chemical informatics models.
+        </p>
+    </header>
+
+    <section class="info-card">
+        <h2>What are MACCS Keys?</h2>
+        <p>
+            MACCS (Molecular ACCess System) keys are a set of predefined structural fragments used to represent
+            molecules as a fixed-length binary fingerprint (166 bits).
+        </p>
+
+        <p>
+            Each bit corresponds to a specific chemical substructure or property. If the feature exists in a molecule,
+            the bit is set to <b>1</b>; otherwise, it is <b>0</b>.
+        </p>
+
+        <p>
+            These fingerprints are widely used in:
+        <ul>
+            <li>Drug discovery</li>
+            <li>QSAR modeling</li>
+            <li>Herbicide / pesticide prediction models</li>
+            <li>Molecular similarity search</li>
+        </ul>
+        </p>
+        <div class="doc-box">
+            <p>
+                Click <a href="static/MACCSKeys.pdf" target="_blank" rel="noopener">here</a>
+                to view MACCS keys official documentation
+            </p>
+        </div>
+    </section>
+
+
+    <section class="table-section">
+        <h2>MACCS Key Definitions</h2>
+
+        <div class="table-wrapper">
+            <table class="maccs-table">
+
+                <thead>
+                    <tr>
+                        <th>Bit ID</th>
+                        <th>Structural Key</th>
+                        <th>Scientific Meaning</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for bit, key, desc in keys %}
+                    <tr>
+                        <td>{{ bit }}</td>
+                        <td>{{ key }}</td>
+                        <td>{{ desc }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
