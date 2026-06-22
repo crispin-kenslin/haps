@@ -5,7 +5,8 @@
 
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<meta name="description" content="AI-powered herbicidal activity classification of chemical compounds using MACCS fingerprints and SVM machine learning.">
+<meta name="description"
+    content="AI-powered herbicidal activity classification of chemical compounds using MACCS fingerprints and SVM machine learning.">
 {% endblock %}
 
 {% block content %}
@@ -45,7 +46,10 @@
                     <!-- PubChem Lookup -->
                     <div class="pubchem-section">
                         <div class="section-label">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="M21 21l-4.35-4.35" />
+                            </svg>
                             Fetch SMILES from PubChem by CID
                         </div>
                         <div class="pubchem-input-row">
@@ -85,28 +89,59 @@
 
         <div class="properties-grid" id="properties-grid"></div>
 
-        <div class="explanation-grid">
-            <div class="chart-card">
-                <div class="chart-card-title">Feature Contributions (Top 15)</div>
-                <div class="chart-container bar-chart">
-                    <canvas id="contributionChart"></canvas>
+        <div style="display:flex; gap:1.5rem; margin-bottom:1.5rem;">
+
+            <!-- Donut -->
+            <div class="chart-card" style="flex:1;">
+                <div class="chart-card-title">Contribution of important MACCS fingerprints</div>
+
+                <div style="
+    height:320px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+">
+                    <canvas id="fingerprintDonutChart"></canvas>
                 </div>
             </div>
-            <div class="chart-card">
-                <div class="chart-card-title">Structural Features Overview</div>
-                <div class="chart-container donut-chart">
-                    <canvas id="presenceChart"></canvas>
+
+            <!-- Radar -->
+            <div class="chart-card" style="flex:1;">
+                <div class="chart-card-title">Molecular Properties Profile</div>
+                <div class="chart-container radar-chart">
+                    <canvas id="radarChart"></canvas>
                 </div>
-                <div id="feature-pills" class="feature-list"></div>
+            </div>
+
+        </div>
+
+        <div class="explanation-grid" style="grid-template-columns: 1fr; margin-bottom: 0;">
+            <div class="chart-card" style="margin-bottom: 1.25rem;">
+                <div class="chart-card-title">Fingerprint Evidence Classification</div>
+                <div id="evidence-classification-container"></div>
+            </div>
+
+
+
+            <div class="chart-card" style="margin-bottom: 1.25rem;">
+                <div class="chart-card-title">Detailed Evidence Table</div>
+                <div class="table-container">
+                    <table id="evidence-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>MACCS Key</th>
+                                <th>Structural Interpretation</th>
+                                <th>Status</th>
+                                <th>Association</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div class="chart-card" style="max-width: 520px; margin: 0 auto 1.5rem;">
-            <div class="chart-card-title">Molecular Properties Profile</div>
-            <div class="chart-container radar-chart">
-                <canvas id="radarChart"></canvas>
-            </div>
-        </div>
     </div>
 </div>
 

@@ -499,7 +499,7 @@ textarea {
 
 .chart-card-title {
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 1rem;
     color: var(--text);
     margin-bottom: 0.75rem;
 }
@@ -510,15 +510,22 @@ textarea {
 }
 
 .chart-container.bar-chart {
-    height: 340px;
+    height: 480px;
 }
 
 .chart-container.donut-chart {
     height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chart-container.radar-chart {
     height: 280px;
+}
+
+.chart-container.evidence-chart {
+    height: 480px;
 }
 
 /* Feature Pills */
@@ -808,4 +815,35 @@ tr:hover {
 
 .doc-box a:hover {
     text-decoration: underline;
+}
+
+.support-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+    gap: 14px;
+}
+
+.support-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    border-left: 5px solid #2E7D32;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.support-name {
+    font-weight: 700;
+    color: #263238;
+    margin-bottom: 6px;
+}
+
+.support-desc {
+    font-size: 0.9rem;
+    color: #607D8B;
+}
+
+.support-empty {
+    padding: 20px;
+    color: #607D8B;
 }

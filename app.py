@@ -3,6 +3,7 @@ import joblib, os, numpy as np
 from rdkit import Chem
 from rdkit.Chem import Descriptors, MACCSkeys, Lipinski
 from rdkit.Chem.rdFingerprintGenerator import GetMorganGenerator
+from waitress import serve
 
 app = Flask(__name__, static_url_path='/herb-pred/static')
 
@@ -379,4 +380,4 @@ def predict_batch():
     return jsonify({"results": results})
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=True) 

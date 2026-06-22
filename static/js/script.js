@@ -90,77 +90,139 @@ async function lookupAndPredict() {
 }
 
 // ── Chart Instances ──
-var contributionChartInstance = null;
-var presenceChartInstance = null;
 var radarChartInstance = null;
-
+var fingerprintDonutChart = null;
 // ── Contribution Bar Chart ──
-function renderContributionChart(chartData) {
-    var ctx = document.getElementById('contributionChart').getContext('2d');
+// ── SHAP Feature Impact Profile Definitions ──
+var SHAP_KEYS = [
+    { rank: 1, bit: 166, name: "FRAGMENTS", desc: "Number of disconnected molecular fragments", effect: "Decreases" },
+    { rank: 2, bit: 99, name: "C=C", desc: "Carbon-carbon double bond", effect: "Decreases" },
+    { rank: 3, bit: 44, name: "OTHER", desc: "Contains uncommon/other atom types", effect: "Decreases" },
+    { rank: 4, bit: 133, name: "A$A!N", desc: "Ring-chain nitrogen junction", effect: "Increases" },
+    { rank: 5, bit: 135, name: "Nnot%A%A", desc: "Non-aromatic nitrogen attached to aromatic system", effect: "Increases" },
+    { rank: 6, bit: 35, name: "GROUP IA", desc: "Li, Na, K, Rb, Cs containing structures", effect: "Decreases" },
+    { rank: 7, bit: 123, name: "OCO", desc: "Ester/carbonate-like O-C-O motif", effect: "Decreases" },
+    { rank: 8, bit: 154, name: "C=O", desc: "Carbonyl group", effect: "Increases" },
+    { rank: 9, bit: 139, name: "OH", desc: "Hydroxyl group", effect: "Increases" },
+    { rank: 10, bit: 97, name: "NAAAO", desc: "Nitrogen connected through three atoms to oxygen", effect: "Increases" },
+    { rank: 11, bit: 65, name: "C%N", desc: "Aromatic carbon-nitrogen bond", effect: "Increases" },
+    { rank: 12, bit: 37, name: "NC(O)N", desc: "Urea-like motif", effect: "Increases" },
+    { rank: 13, bit: 146, name: "O > 2", desc: "More than two oxygen atoms", effect: "Decreases" },
+    { rank: 14, bit: 138, name: "QCH2A > 1", desc: "Multiple heteroatom-CH2-atom motifs", effect: "Increases" },
+    { rank: 15, bit: 156, name: "NA(A)A", desc: "Tertiary nitrogen environment", effect: "Increases" },
+    { rank: 16, bit: 12, name: "GROUP IB/IIB", desc: "Transition metal-containing structures", effect: "Decreases" },
+    { rank: 17, bit: 76, name: "C=C(A)A", desc: "Substituted alkene", effect: "Decreases" },
+    { rank: 18, bit: 164, name: "O", desc: "Oxygen atom present", effect: "Increases" },
+    { rank: 19, bit: 106, name: "QA(Q)Q", desc: "Atom bonded to multiple heteroatoms", effect: "Increases" },
+    { rank: 20, bit: 89, name: "OAAAO", desc: "Oxygen separated by three atoms from oxygen", effect: "Decreases" }
+];
 
-    var top = chartData
-        .filter(function (d) { return d.contribution !== 0; })
-        .sort(function (a, b) { return Math.abs(b.contribution) - Math.abs(a.contribution); })
-        .slice(0, 15);
+function renderFingerprintDonut(chartData, predictionLabel) {
+    var mappedData = SHAP_KEYS.map(function (key) {
 
-    var labels = top.map(function (d) { return d.name; });
-    var values = top.map(function (d) { return +d.contribution.toFixed(3); });
-    var colors = values.map(function (v) {
-        return v > 0 ? 'rgba(46, 125, 50, 0.75)' : 'rgba(198, 40, 40, 0.75)';
+        var match = chartData.find(function (d) {
+            return d.bit_index === key.bit;
+        });
+
+        return {
+            isPresent: match ? match.status === 'Present' : false,
+            direction: FEATURE_DIRECTION[key.bit] || "NON_HERBICIDE"
+        };
     });
 
-    if (contributionChartInstance) contributionChartInstance.destroy();
+    var supportsPrediction = [];
+    var opposesPrediction = [];
 
-    contributionChartInstance = new Chart(ctx, {
-        type: 'bar',
+    mappedData.forEach(function (d) {
+
+        var supportsHerbicideSignal =
+            (d.direction === "HERBICIDE" && d.isPresent) ||
+            (d.direction === "NON_HERBICIDE" && !d.isPresent);
+
+        if (predictionLabel === "Herbicide") {
+
+            if (supportsHerbicideSignal) {
+                supportsPrediction.push(d);
+            } else {
+                opposesPrediction.push(d);
+            }
+
+        } else {
+
+            if (!supportsHerbicideSignal) {
+                supportsPrediction.push(d);
+            } else {
+                opposesPrediction.push(d);
+            }
+        }
+    });
+
+    var supportCount = supportsPrediction.length;
+    var opposeCount = opposesPrediction.length;
+
+    var ctx =
+        document
+            .getElementById('fingerprintDonutChart')
+            .getContext('2d');
+
+    if (fingerprintDonutChart) {
+        fingerprintDonutChart.destroy();
+    }
+
+    fingerprintDonutChart = new Chart(ctx, {
+
+        type: 'doughnut',
+
         data: {
-            labels: labels,
+
+            labels: [
+                'Supports Prediction',
+                'Opposes Prediction'
+            ],
+
             datasets: [{
-                label: 'Contribution',
-                data: values,
-                backgroundColor: colors,
-                borderRadius: 3,
-                barPercentage: 0.7,
-                categoryPercentage: 0.85
+
+                data: [
+                    supportCount,
+                    opposeCount
+
+                ],
+
+                backgroundColor: [
+                    '#2E7D32',
+                    '#C62828'
+
+                ],
+
+                borderWidth: 0
+
             }]
         },
+
         options: {
-            indexAxis: 'y',
+
             responsive: true,
-            maintainAspectRatio: false,
-            layout: { padding: { left: 4, right: 12 } },
-            scales: {
-                x: {
-                    grid: { color: 'rgba(0,0,0,0.06)' },
-                    ticks: { color: '#546E7A', font: { family: 'Inter', size: 11 } },
-                    title: {
-                        display: true,
-                        text: 'SVM Weight × Presence',
-                        color: '#78909C',
-                        font: { family: 'Inter', size: 11 }
-                    }
-                },
-                y: {
-                    grid: { display: false },
-                    ticks: { color: '#263238', font: { family: 'Inter', size: 15 } }
-                }
-            },
+
+            cutout: '65%',
+
             plugins: {
-                legend: { display: false },
+
+                legend: {
+                    position: 'bottom'
+                },
+
                 tooltip: {
-                    backgroundColor: '#263238',
-                    cornerRadius: 6,
-                    padding: 10,
-                    titleFont: { family: 'Inter', weight: '600' },
-                    bodyFont: { family: 'Inter' },
+
                     callbacks: {
-                        title: function (items) {
-                            var idx = items[0].dataIndex;
-                            return top[idx].name + ' (Key ' + top[idx].bit_index + ')';
-                        },
-                        label: function (item) {
-                            var d = top[item.dataIndex];
-                            return ['Contribution: ' + d.contribution.toFixed(4), 'Status: ' + d.status];
+
+                        label: function (context) {
+
+                            return (
+                                context.label +
+                                ': ' +
+                                context.raw
+                            );
+
                         }
                     }
                 }
@@ -169,108 +231,166 @@ function renderContributionChart(chartData) {
     });
 }
 
-// ── Presence Donut Chart ──
-function renderPresenceChart(chartData) {
-    var ctx = document.getElementById('presenceChart').getContext('2d');
+var FEATURE_DIRECTION = {
+    166: "NON_HERBICIDE",
+    99: "NON_HERBICIDE",
+    44: "NON_HERBICIDE",
+    133: "HERBICIDE",
+    135: "HERBICIDE",
+    35: "NON_HERBICIDE",
+    123: "NON_HERBICIDE",
+    154: "HERBICIDE",
+    139: "HERBICIDE",
+    97: "HERBICIDE",
+    65: "HERBICIDE",
+    37: "HERBICIDE",
+    146: "NON_HERBICIDE",
+    138: "HERBICIDE",
+    156: "HERBICIDE",
+    12: "NON_HERBICIDE",
+    76: "NON_HERBICIDE",
+    164: "HERBICIDE",
+    106: "HERBICIDE",
+    89: "NON_HERBICIDE"
+};
 
-    var present = chartData.filter(function (d) { return d.status === 'Present'; }).length;
-    var absent = chartData.filter(function (d) { return d.status === 'Absent'; }).length;
+function renderEvidenceDashboard(chartData, predictionLabel) {
+    var tbody = document.querySelector('#evidence-table tbody');
+    tbody.innerHTML = '';
 
-    if (presenceChartInstance) presenceChartInstance.destroy();
+    var mappedData = SHAP_KEYS.map(function (key) {
 
-    presenceChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Present', 'Absent'],
-            datasets: [{
-                data: [present, absent],
-                backgroundColor: ['rgba(46, 125, 50, 0.7)', 'rgba(207, 216, 220, 0.7)'],
-                borderColor: ['#2E7D32', '#B0BEC5'],
-                borderWidth: 1.5,
-                hoverOffset: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#263238',
-                        font: { family: 'Inter', size: 12 },
-                        padding: 16,
-                        usePointStyle: true,
-                        pointStyleWidth: 10
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#263238',
-                    cornerRadius: 6,
-                    padding: 10,
-                    callbacks: {
-                        label: function (item) {
-                            var total = present + absent;
-                            var pct = ((item.raw / total) * 100).toFixed(1);
-                            return ' ' + item.label + ': ' + item.raw + ' keys (' + pct + '%)';
-                        }
-                    }
-                }
-            }
-        },
-        plugins: [{
-            id: 'centerText',
-            afterDraw: function (chart) {
-                var c = chart.ctx;
-                var w = chart.width;
-                var top = chart.chartArea.top;
-                var bottom = chart.chartArea.bottom;
-                var cy = (top + bottom) / 2;
-                c.save();
-                c.textAlign = 'center';
-                c.textBaseline = 'middle';
-                c.fillStyle = '#263238';
-                c.font = "700 1.5rem 'Inter'";
-                c.fillText(present, w / 2, cy - 8);
-                c.fillStyle = '#78909C';
-                c.font = "500 0.65rem 'Inter'";
-                c.fillText('KEYS ACTIVE', w / 2, cy + 12);
-                c.restore();
-            }
-        }]
+        var match = chartData.find(function (d) {
+            return d.bit_index === key.bit;
+        });
+
+        var isPresent = match ? match.status === 'Present' : false;
+
+        var direction = FEATURE_DIRECTION[key.bit] || "NON_HERBICIDE";
+
+        return {
+            rank: key.rank,
+            bit: key.bit,
+            name: key.name,
+            desc: key.desc,
+            isPresent: isPresent,
+            direction: direction,
+            association: (direction === "HERBICIDE")
+                ? "Herbicide-associated"
+                : "Non-Herbicide-associated"
+        };
     });
-}
 
-// ── Feature Pills ──
-function renderFeaturePills(chartData) {
-    var container = document.getElementById('feature-pills');
-    container.innerHTML = '';
+    mappedData.sort(function (a, b) { return a.rank - b.rank; });
 
-    var topPresent = chartData
-        .filter(function (d) { return d.status === 'Present'; })
-        .sort(function (a, b) { return Math.abs(b.contribution) - Math.abs(a.contribution); })
-        .slice(0, 10);
+    // Populate Table
+    mappedData.forEach(function (d) {
+        var tr = document.createElement('tr');
+        var statusHtml = d.isPresent
+            ? '<span style="color:var(--success);font-weight:700;">Present</span>'
+            : '<span style="color:var(--text-secondary);">Absent</span>';
+        var assocColor = d.association === 'Herbicide-associated' ? 'var(--success)' : 'var(--danger)';
+        var assocHtml = '<span style="color:' + assocColor + ';font-weight:600;">' + d.association + '</span>';
 
-    topPresent.forEach(function (d) {
-        var pill = document.createElement('span');
-        pill.className = 'feature-pill present';
-        pill.innerHTML = '<span class="dot"></span>' + d.name;
-        pill.title = 'Key ' + d.bit_index + ' | Contribution: ' + d.contribution.toFixed(4);
-        container.appendChild(pill);
+        tr.innerHTML =
+            '<td>' + d.rank + '</td>' +
+            '<td>Key ' + d.bit + ': ' + d.name + '</td>' +
+            '<td>' + d.desc + '</td>' +
+            '<td>' + statusHtml + '</td>' +
+            '<td>' + assocHtml + '</td>';
+        tbody.appendChild(tr);
     });
+
+    function generateCategoryHtml(title, items, color) {
+        var html = '<div style="margin-bottom: 1rem;">';
+        html += '<h4 style="color:' + color + '; margin-bottom: 0.5rem; font-size: 0.9rem;">' + title + ' (' + items.length + ')</h4>';
+        if (items.length === 0) {
+            html += '<p style="color:var(--text-secondary); font-size: 0.85rem; margin-top: 0;">None detected</p>';
+        } else {
+            html += '<div style="display:flex; flex-wrap:wrap; gap:0.4rem;">';
+            items.forEach(function (item) {
+                var pillBg = color === 'var(--success)' ? 'var(--success-bg)' : (color === 'var(--danger)' ? 'var(--danger-bg)' : '#f5f5f5');
+                html += '<span class="feature-pill" style="border:1px solid ' + color + '; color: ' + color + '; background: ' + pillBg + ';">#' + item.rank + ' ' + item.name + '</span>';
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+        return html;
+    }
+    var supportsPrediction = [];
+    var opposesPrediction = [];
+
+    mappedData.forEach(function (d) {
+
+        var supportsHerbicideSignal =
+            (d.direction === "HERBICIDE" && d.isPresent) ||
+            (d.direction === "NON_HERBICIDE" && !d.isPresent);
+
+        if (predictionLabel === "Herbicide") {
+
+            if (supportsHerbicideSignal) {
+                supportsPrediction.push(d);
+            } else {
+                opposesPrediction.push(d);
+            }
+
+        } else {
+
+            // flipped logic for Non-Herbicide
+            if (!supportsHerbicideSignal) {
+                supportsPrediction.push(d);
+            } else {
+                opposesPrediction.push(d);
+            }
+        }
+    });
+    var container = document.getElementById('evidence-classification-container');
+
+    if (predictionLabel === "Herbicide") {
+
+        container.innerHTML =
+            generateCategoryHtml(
+                'Supports Herbicide prediction',
+                supportsPrediction,
+                'var(--success)'
+            ) +
+            generateCategoryHtml(
+                'Opposes Herbicide prediction',
+                opposesPrediction,
+                'var(--danger)'
+            );
+
+    } else {
+
+        container.innerHTML =
+            generateCategoryHtml(
+                'Supports Non-Herbicide prediction',
+                supportsPrediction,
+                'var(--danger)'
+            ) +
+            generateCategoryHtml(
+                'Opposes Non-Herbicide prediction',
+                opposesPrediction,
+                'var(--success)'
+            );
+    }
 }
 
 // ── Radar Chart ──
-function renderRadarChart(properties) {
+function renderRadarChart(properties, predictionLabel) {
     var ctx = document.getElementById('radarChart').getContext('2d');
+    var isHerbicide = predictionLabel === 'Herbicide';
+
+    var bgColor = isHerbicide ? 'rgba(27, 94, 32, 0.12)' : 'rgba(183, 28, 28, 0.12)';
+    var borderColor = isHerbicide ? 'rgba(27, 94, 32, 0.7)' : 'rgba(183, 28, 28, 0.7)';
+    var pointColor = isHerbicide ? '#1B5E20' : '#B71C1C';
 
     if (radarChartInstance) radarChartInstance.destroy();
 
     radarChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Mol Wt (/100)', 'LogP', 'H-Donors', 'H-Acceptors', 'TPSA (/10)', 'Rot. Bonds'],
+            labels: ['Mol Wt', 'LogP', 'H-Donors', 'H-Acceptors', 'TPSA', 'Rot. Bonds'],
             datasets: [{
                 label: 'Compound',
                 data: [
@@ -281,9 +401,9 @@ function renderRadarChart(properties) {
                     properties.tpsa / 10,
                     properties.rotatable_bonds
                 ],
-                backgroundColor: 'rgba(27, 94, 32, 0.12)',
-                borderColor: 'rgba(27, 94, 32, 0.7)',
-                pointBackgroundColor: '#1B5E20',
+                backgroundColor: bgColor,
+                borderColor: borderColor,
+                pointBackgroundColor: pointColor,
                 pointBorderColor: '#FFFFFF',
                 pointBorderWidth: 2,
                 pointRadius: 4,
@@ -388,13 +508,19 @@ async function predictSingle() {
 
         // Explanation charts
         if (data.explanation && data.explanation.chart_data) {
-            renderContributionChart(data.explanation.chart_data);
-            renderPresenceChart(data.explanation.chart_data);
-            renderFeaturePills(data.explanation.chart_data);
+            renderFingerprintDonut(
+                data.explanation.chart_data,
+                data.prediction
+            );
+
+            renderEvidenceDashboard(
+                data.explanation.chart_data,
+                data.prediction
+            );
         }
 
         // Radar
-        renderRadarChart(data.properties);
+        renderRadarChart(data.properties, data.prediction);
 
         resultBox.style.display = 'block';
         setTimeout(function () {
