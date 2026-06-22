@@ -124,7 +124,17 @@
 
 
             <div class="chart-card" style="margin-bottom: 1.25rem;">
-                <div class="chart-card-title">Detailed Evidence Table</div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                    <div class="chart-card-title" style="margin-bottom:0;">
+                        Detailed Evidence Table
+                    </div>
+
+                    <button class="btn-secondary" onclick="downloadEvidenceCSV()">
+                        Download CSV
+                    </button>
+                </div>
+
                 <div class="table-container">
                     <table id="evidence-table">
                         <thead>
@@ -132,13 +142,14 @@
                                 <th>Rank</th>
                                 <th>MACCS Key</th>
                                 <th>Structural Interpretation</th>
-                                <th>Status</th>
                                 <th>Association</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
+
             </div>
         </div>
 
