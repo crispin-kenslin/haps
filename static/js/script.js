@@ -678,3 +678,8 @@ function downloadEvidenceCSV() {
 
     URL.revokeObjectURL(url);
 }
+
+function insertExampleSmiles() {
+    document.getElementById("smiles-input").value =
+        "CC1=C(C=CC(=C1Cl)OC(C)C(=O)NC2=CC=CC=C2)Cl";
+}

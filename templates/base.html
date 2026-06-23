@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Herbicide Classifier{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/TNAU-Logo.png') }}">
+    <title>{% block title %}HAPS{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/HAPS-logo-transparent.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -14,8 +14,9 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="{{ url_for('index') }}" class="nav-brand">
-            <img src="{{ url_for('static', filename='images/TNAU-Logo.png') }}" alt="TNAU Logo">
-            <span>Herbicide Classifier</span>
+            <img src="{{ url_for('static', filename='images/HAPS-logo-transparent.png') }}" alt="HAPS Logo">
+            <span class="haps-title">H A P S</span>
+            <span>Herbicide Activity Prediction System</span>
         </a>
         <div class="nav-links">
             <a href="{{ url_for('index') }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a>

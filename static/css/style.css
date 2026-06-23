@@ -68,12 +68,12 @@ body {
     gap: 0.75rem;
     text-decoration: none;
     color: var(--primary-dark);
-    font-weight: 700;
-    font-size: 1.15rem;
+    font-weight: 500;
+    font-size: 1.5rem;
 }
 
 .nav-brand img {
-    height: 52px;
+    height: 60px;
     width: auto;
     object-fit: contain;
 }
@@ -121,8 +121,8 @@ header h1 {
 }
 
 header p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+    color: black;
+    font-size: 1rem;
     margin-top: 0.4rem;
 }
 
@@ -349,6 +349,15 @@ textarea {
 
 .btn-secondary:hover {
     background: #f0f7f0;
+}
+
+.help-image {
+    display: block;
+    margin: 15px auto;
+    max-width: 70%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
 .btn-accent {
@@ -754,15 +763,19 @@ tr:hover {
     }
 }
 
+.haps-title {
+    font-weight: 1000;
+    font-size: 1.7rem;
+    margin: 5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
 @media (max-width: 768px) {
     .navbar {
         padding: 0.5rem 1rem;
         flex-wrap: wrap;
         gap: 0.4rem;
-    }
-
-    .nav-brand {
-        font-size: 0.95rem;
     }
 
     .nav-links {

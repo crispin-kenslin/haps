@@ -11,8 +11,15 @@
 
 {% block content %}
 <header>
-    <h1>Herbicidal Activity Classification Model using Machine Learning</h1>
-    <p>Classify chemical compounds using MACCS structural fingerprints and SVM</p>
+    <h1>Herbicidal Activity Prediction System using Machine Learning</h1>
+    <p>Herbicides are used for selective killing of weeds in crop fields.</p>
+    <p>Predicting the herbicidal activity of chemical compounds is an important task in agrochemical discovery and
+        development.</p>
+    <p>This system predicts herbicidal activity of chemical compounds using <b>MACCS</b> structural fingerprints and
+        <b>Support Vector Machine</b> (SVM)
+    </p>
+    <p>The predictions are <b>explained by the contribution of top 20 MACCS structural fingerprints</b> to the
+        prediction.</p>
 </header>
 
 <div class="tabs">
@@ -40,7 +47,15 @@
                 <div class="input-panel">
                     <div class="form-group">
                         <label for="smiles-input">Enter the SMILES Identifier of the compound</label>
-                        <input type="text" id="smiles-input" placeholder="e.g. C1=CC=C(C=C1)C2=CC=NN2C">
+
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="text" id="smiles-input"
+                                placeholder="e.g. CC1=C(C=CC(=C1Cl)OC(C)C(=O)NC2=CC=CC=C2)Cl" style="flex:1;">
+
+                            <button type="button" class="btn-secondary" onclick="insertExampleSmiles()">
+                                Example
+                            </button>
+                        </div>
                     </div>
 
                     <!-- PubChem Lookup -->
@@ -142,8 +157,8 @@
                                 <th>Rank</th>
                                 <th>MACCS Key</th>
                                 <th>Structural Interpretation</th>
-                                <th>Association</th>
                                 <th>Status</th>
+                                <th>Association</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -192,7 +207,12 @@
         </div>
     </div>
 </div>
-
+<div class="chart-card" style="margin-bottom: 1.25rem; margin-top: 1.25rem;">
+    <p><b>If you use this tool in your study - please cite as</b></p>
+    <p class="pubchem-section">Crispin Joe Kenslin A & Saranya N. (2026). <i>HAPS (Herbicide Activity Prediction
+            System): An explainable machine learning-based herbicide activity classification framework using molecular
+            fingerprints.</i></p>
+</div>
 <div class="toast-container" id="toast-container"></div>
 {% endblock %}
 

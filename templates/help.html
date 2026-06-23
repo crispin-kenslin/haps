@@ -8,18 +8,22 @@
     .help-section {
         margin-bottom: 1.75rem;
     }
+
     .help-section h3 {
         color: var(--primary);
         margin-bottom: 0.4rem;
         font-size: 1rem;
     }
+
     ul {
         padding-left: 1.5rem;
         color: var(--text-secondary);
     }
+
     li {
         margin-bottom: 0.4rem;
     }
+
     li strong {
         color: var(--text);
     }
@@ -36,11 +40,16 @@
     <div class="help-section">
         <h3>Single Prediction using Molecule Editor</h3>
         <ul>
-            <li>Use the <strong>Draw Molecule</strong> panel (Ketcher) on the Home page to draw your chemical structure.</li>
-            <li>Once drawn, click <strong>Transfer to Input →</strong>. This converts your drawing into a SMILES string.</li>
+            <li>Use the <strong>Draw Molecule</strong> panel (Ketcher) on the Home page to draw your chemical structure.
+            </li>
+            <li>Once drawn, click <strong>Transfer to Input →</strong>. This converts your drawing into a SMILES string.
+            </li>
             <li>Click <strong>Run Prediction</strong>.</li>
-            <li>The model will display the prediction, confidence score, explanation charts, and molecular properties.</li>
+            <li>The model will display the prediction, confidence score, explanation charts, and molecular properties.
+            </li>
         </ul>
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide1.png') }}" alt="Draw Molecule"
+            class="help-image">
     </div>
 
     <div class="help-section">
@@ -54,10 +63,15 @@
     <div class="help-section">
         <h3>PubChem CID Lookup</h3>
         <ul>
-            <li>Enter a <strong>PubChem Compound ID (CID)</strong> in the lookup section and click <strong>Fetch &amp; Predict</strong>.</li>
-            <li>The SMILES will be retrieved from PubChem, filled in automatically, and the prediction will run immediately.</li>
-            <li>Find CIDs at <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" style="color: var(--primary);">pubchem.ncbi.nlm.nih.gov</a>.</li>
+            <li>Enter a <strong>PubChem Compound ID (CID)</strong> in the lookup section and click <strong>Fetch &amp;
+                    Predict</strong>.</li>
+            <li>The SMILES will be retrieved from PubChem, filled in automatically, and the prediction will run
+                immediately.</li>
+            <li>Find CIDs at <a href="https://pubchem.ncbi.nlm.nih.gov" target="_blank"
+                    style="color: var(--primary);">pubchem.ncbi.nlm.nih.gov</a>.</li>
         </ul>
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide4.png') }}" alt="Draw Molecule"
+            class="help-image">
     </div>
 
     <div class="help-section">
@@ -68,15 +82,32 @@
             <li>Click <strong>Run Batch Prediction</strong>.</li>
             <li>Download results as CSV using the <strong>Download CSV</strong> button.</li>
         </ul>
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide5.png') }}" alt="Draw Molecule"
+            class="help-image">
     </div>
 
     <div class="help-section">
         <h3>Understanding the Results</h3>
         <ul>
-            <li><strong>Feature Contributions</strong> — Shows which MACCS structural keys had the most impact. Green bars indicate features pushing toward "Herbicide".</li>
-            <li><strong>Structural Features Overview</strong> — Donut chart showing how many selected MACCS keys are present vs. absent. Tags below list top active features.</li>
-            <li><strong>Molecular Properties Profile</strong> — Radar chart of key descriptors (molecular weight, LogP, H-bond donors/acceptors, TPSA, rotatable bonds).</li>
+            <li><strong>Feature Contributions</strong> - Shows which MACCS structural keys had the most impact. Green
+                bars indicate features pushing toward "Herbicide".</li>
+            <li><strong>Structural Features Overview</strong> - Donut chart showing how many selected MACCS keys are
+                present vs. absent. Tags below list top active features.</li>
+            <li><strong>Molecular Properties Profile</strong> - Radar chart of key descriptors (molecular weight, LogP,
+                H-bond donors/acceptors, TPSA, rotatable bonds).</li>
         </ul>
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide2.png') }}" alt="Draw Molecule"
+            class="help-image">
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide3.png') }}" alt="Draw Molecule"
+            class="help-image">
+
+        <ul>
+            <li><strong>Evidence table</strong> - Table shows the important fingerprints ranked in order and the effect
+                of the fingerprint on herbicide prediciton. Status shows the effect of the fingerprint in the input
+                compound.</li>
+        </ul>
+        <img src="{{ url_for('static', filename='../static/images/website-pics/Slide6.png') }}" alt="Draw Molecule"
+            class="help-image">
     </div>
 </div>
 {% endblock %}
