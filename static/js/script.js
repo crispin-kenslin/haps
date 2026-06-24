@@ -188,11 +188,16 @@ function renderFingerprintDonut(chartData, predictionLabel) {
 
                 ],
 
-                backgroundColor: [
-                    '#2E7D32',
-                    '#C62828'
-
-                ],
+                backgroundColor:
+                    predictionLabel === "Herbicide"
+                        ? [
+                            '#2E7D32', // supports = green
+                            '#C62828'  // opposes = red
+                        ]
+                        : [
+                            '#C62828', // supports = red
+                            '#2E7D32'  // opposes = green
+                        ],
 
                 borderWidth: 0
 
@@ -682,4 +687,18 @@ function downloadEvidenceCSV() {
 function insertExampleSmiles() {
     document.getElementById("smiles-input").value =
         "CC1=C(C=CC(=C1Cl)OC(C)C(=O)NC2=CC=CC=C2)Cl";
+}
+
+function insertExampleSmilesbatch() {
+    document.getElementById("batch-input").value =
+`CCO
+CC(=O)O
+c1ccccc1
+CCN(CC)CC
+CC(C)O
+CCOC(=O)C
+CC(C)C(=O)O
+C1CCCCC1
+CC(C)CC
+CC(C)(C)O`;
 }

@@ -211,7 +211,7 @@ header p {
 label {
     display: block;
     font-weight: 600;
-    font-size: 0.82rem;
+    font-size: 1rem;
     margin-bottom: 0.35rem;
     color: var(--text);
 }
@@ -241,7 +241,7 @@ textarea:focus {
 
 textarea {
     resize: vertical;
-    min-height: 150px;
+    min-height: 300px;
 }
 
 /* ── PubChem Section ── */

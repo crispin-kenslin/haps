@@ -175,7 +175,13 @@
 <div id="tab-batch" class="tab-content">
     <div class="card">
         <div class="form-group">
-            <label for="batch-input">Enter Multiple SMILES (one per line)</label>
+            <div style="display:flex; justify-content:space-between; align-items:center;  margin-bottom:10px;">
+    <label for="batch-input">Enter Multiple SMILES (one per line)</label>
+
+    <button type="button" class="btn-secondary" onclick="insertExampleSmilesbatch()">
+        Example
+    </button>
+</div>
             <textarea id="batch-input" placeholder="CCO&#10;c1ccccc1&#10;CC(=O)O"></textarea>
         </div>
         <button class="btn-primary" onclick="predictBatch()">Run Batch Prediction</button>
