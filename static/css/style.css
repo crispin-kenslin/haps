@@ -351,6 +351,11 @@ textarea {
     background: #f0f7f0;
 }
 
+.help-section li{
+    font-size: 1rem;
+    color: black;
+}
+
 .help-image {
     display: block;
     margin: 15px auto;
