@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set active_page = 'help' %}
 
-{% block title %}Help - TNAU Herbicide Predictor{% endblock %}
+{% block title %}Help - HAPS{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -93,6 +93,8 @@
 
             <li><strong>Molecular Properties Profile</strong> - Radar chart of key descriptors (molecular weight, LogP,
                 H-bond donors/acceptors, TPSA, rotatable bonds).</li>
+
+            <li><strong>Fingerprint Evidence Classification</strong> - visual representation of the fingerprints associated with teh prediction.</li>
         </ul>
         <img src="{{ url_for('static', filename='../static/images/website-pics/Slide2.png') }}" alt="Draw Molecule"
             class="help-image">
@@ -100,8 +102,10 @@
             class="help-image">
 
         <ul>
-            <li><strong>Evidence table</strong> - Table shows the important fingerprints ranked in order and the effect
-                of the fingerprint on herbicide prediciton. Status shows the effect of the fingerprint in the input
+            <li><strong>Evidence table</strong> - Table shows the important fingerprints ranked in orde of feature importance and the effect
+                of the fingerprint on herbicide prediciton. </li>
+                <li>Association shows the effect of the fingerprint in realtion to the herbicidal activity.</li> 
+                <li>Status shows the effect of the fingerprint in the input
                 compound.</li>
         </ul>
         <img src="{{ url_for('static', filename='../static/images/website-pics/Slide6.png') }}" alt="Draw Molecule"

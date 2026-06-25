@@ -328,6 +328,8 @@ textarea {
 
 .btn-primary:hover {
     background: var(--primary-light);
+    color: var(--primary);
+
 }
 
 .btn-secondary {
@@ -385,6 +387,7 @@ textarea {
 
 .btn-accent:hover {
     background: var(--primary-light);
+    color: var(--primary);
 }
 
 /* ── Ketcher Editor ── */
