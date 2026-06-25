@@ -716,6 +716,31 @@ tr:hover {
     flex-wrap: wrap;
 }
 
+
+.about-card {
+    line-height: 1.8;
+}
+
+.about-card h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.about-card h2:first-child {
+    margin-top: 0;
+}
+
+.about-card p {
+    margin-bottom: 16px;
+}
+
+
+
+.footer-logo {
+    height: 100px;
+    width: auto;
+}
+
 .footer-col h4 {
     font-size: 0.78rem;
     font-weight: 700;

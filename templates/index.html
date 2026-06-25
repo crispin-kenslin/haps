@@ -120,13 +120,22 @@
                 </div>
             </div>
 
-            <!-- Radar -->
-            <div class="chart-card" style="flex:1;">
-                <div class="chart-card-title">Molecular Properties Profile</div>
-                <div class="chart-container radar-chart">
-                    <canvas id="radarChart"></canvas>
-                </div>
-            </div>
+<!-- Radar -->
+<div class="chart-card" style="flex:1;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <div class="chart-card-title" style="margin-bottom:0;">
+            Molecular Properties Profile
+        </div>
+
+        <button class="btn-secondary" onclick="downloadPropertiesCSV()">
+            Download CSV
+        </button>
+    </div>
+
+    <div class="chart-container radar-chart">
+        <canvas id="radarChart"></canvas>
+    </div>
+</div>
 
         </div>
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set active_page = 'about' %}
 
-{% block title %}About - TNAU Herbicide Predictor{% endblock %}
+{% block title %}About - HAPS{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -30,8 +30,37 @@
 {% block content %}
 <header>
     <h1>About the Project</h1>
-    <p>Meet the team behind the Herbicidal Activity Classification Model</p>
 </header>
+
+<div class="card about-card">
+    <h2>Herbicides</h2>
+    <p>
+        Weeds are a major threat to agricultural productivity because they compete with crops for water, nutrients, sunlight, and space. Herbicides are chemical compounds used to control or eliminate these unwanted plants and are now an essential part of modern weed management.
+    </p>
+
+<h2>Why New Herbicides Matter ?</h2>
+<p>
+    Although herbicides are effective, the continuous use of existing compounds has led to herbicide-resistant weeds and environmental concerns. Developing safer, selective, and more efficient herbicides is therefore an important challenge in sustainable agriculture.
+</p>
+
+<h2>Machine Learning in Herbicide Research</h2>
+<p>
+    Discovering new herbicidal compounds through traditional experimental screening is costly and time-consuming. Machine learning offers a faster alternative by identifying patterns in chemical data and helping predict biological activity before laboratory testing.
+</p>
+
+<h2>Herbicidal Activity Prediction</h2>
+<p>
+    This project predicts whether a chemical compound is herbicidal or non-herbicidal using its SMILES notation, compound ID, and molecular fingerprint features. These descriptors capture structural information that can be used to train predictive classification models.
+</p>
+
+<h2>Project Goal</h2>
+<p>
+    The aim of this system is to support herbicide discovery by providing a rapid, data-driven approach for screening compounds, reducing experimental effort, and accelerating the search for effective weed-control agents.
+</p>
+
+
+</div>
+
 
 <div class="card">
     <h2 style="color: var(--primary-dark); margin-bottom: 0.5rem;">Our Team</h2>

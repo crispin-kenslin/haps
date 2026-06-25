@@ -88,6 +88,70 @@ async function lookupAndPredict() {
         showToast('PubChem error: ' + error.message);
     }
 }
+function downloadPropertiesCSV() {
+    var smiles = document.getElementById('smiles-input').value.trim();
+
+    var propertyCards = document.querySelectorAll('#properties-grid .property-card');
+    if (!propertyCards || propertyCards.length === 0) {
+        showToast('No property data available to download.', 'info');
+        return;
+    }
+
+    function csvEscape(value) {
+        if (value === null || value === undefined) return '""';
+        return '"' + String(value).replace(/"/g, '""') + '"';
+    }
+
+    // Get prediction + confidence
+    var prediction = document.getElementById('pred-badge')
+        ? document.getElementById('pred-badge').textContent.trim()
+        : '';
+
+    var confidence = document.getElementById('pred-conf')
+        ? document.getElementById('pred-conf').textContent.trim()
+        : '';
+
+    var predictionValue = prediction;
+    if (confidence) {
+        predictionValue += ' (' + confidence + ')';
+    }
+
+    var csvRows = [];
+    csvRows.push("Property,Value");
+
+    // SMILES row
+    csvRows.push(csvEscape("SMILES") + "," + csvEscape(smiles));
+
+    // Prediction row
+    csvRows.push(csvEscape("Prediction") + "," + csvEscape(predictionValue));
+
+    // Property rows
+    propertyCards.forEach(function(card) {
+        var labelEl = card.querySelector('.property-label');
+        var valueEl = card.querySelector('.property-value');
+
+        if (!labelEl || !valueEl) return;
+
+        var property = labelEl.textContent.trim();
+        var value = valueEl.textContent.trim();
+
+        csvRows.push(csvEscape(property) + "," + csvEscape(value));
+    });
+
+    var csvContent = csvRows.join("\n");
+    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = "compound_properties.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+    showToast('Properties CSV downloaded.', 'success', 2000);
+}
 
 // ── Chart Instances ──
 var radarChartInstance = null;
