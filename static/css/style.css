@@ -893,3 +893,50 @@ tr:hover {
     padding: 20px;
     color: #607D8B;
 }
+
+/* Metrics Panel Container */
+.metrics-panel {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 2rem;
+    margin: 1.5rem auto;
+    max-width: fit-content;
+    box-shadow: var(--shadow-md);
+}
+
+/* Individual Metric Text */
+.metrics-panel p {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Emphasized Numbers (Using your Primary Brand Color) */
+.metrics-panel strong {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius);
+}
+
+/* Smooth layout shift for mobile/smaller screens */
+@media (max-width: 600px) {
+    .metrics-panel {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+        padding: 1.25rem 1.5rem;
+    }
+}
