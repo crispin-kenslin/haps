@@ -64,7 +64,7 @@ async function lookupAndPredict() {
     resultDiv.style.display = 'none';
 
     try {
-        var response = await fetch('/herb-pred/pubchem/' + cid);
+        var response = await fetch('/herbipred/pubchem/' + cid);
         var data = await response.json();
 
         if (!response.ok) {
@@ -551,7 +551,7 @@ async function predictSingle() {
     resultBox.style.display = 'none';
 
     try {
-        var response = await fetch('/herb-pred/predict', {
+        var response = await fetch('/herbipred/predict', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ smiles: smiles })
@@ -625,7 +625,7 @@ async function predictBatch() {
     currentBatchData = [];
 
     try {
-        var response = await fetch('/herb-pred/predict_batch', {
+        var response = await fetch('/herbipred/predict_batch', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ smiles_list: smilesList })

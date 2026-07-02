@@ -5,7 +5,7 @@ from rdkit.Chem import Descriptors, MACCSkeys, Lipinski
 from rdkit.Chem.rdFingerprintGenerator import GetMorganGenerator
 from waitress import serve
 
-app = Flask(__name__, static_url_path='/herb-pred/static')
+app = Flask(__name__, static_url_path='/herbipred/static')
 
 # Load Models
 model = joblib.load("models/MACCS_SVM.pkl")
@@ -137,7 +137,7 @@ def get_prediction(smiles):
         print(traceback.format_exc())
         return None, {"error": f"Prediction error: {str(e)}"}
 
-@app.route('/herb-pred/')
+@app.route('/herbipred/')
 def index():
     return render_template('index.html')
 MACCS_KEYS = [
@@ -323,19 +323,19 @@ MACCS_KEYS = [
 (165, "RING", "Any cyclic structure"),
 (166, "FRAGMENTS", "General molecular fragments"),
 ]
-@app.route('/herb-pred/keys')
+@app.route('/herbipred/keys')
 def keys():
     return render_template('keys.html', keys = MACCS_KEYS)
 
-@app.route('/herb-pred/about')
+@app.route('/herbipred/about')
 def about():
     return render_template('about.html')
 
-@app.route('/herb-pred/help')
+@app.route('/herbipred/help')
 def help_page():
     return render_template('help.html')
 
-@app.route('/herb-pred/pubchem/<int:cid>')
+@app.route('/herbipred/pubchem/<int:cid>')
 def pubchem_lookup(cid):
     """Proxy endpoint to fetch SMILES from PubChem by CID."""
     import urllib.request, json as json_mod
@@ -354,7 +354,7 @@ def pubchem_lookup(cid):
     except Exception as e:
         return jsonify({"error": f"PubChem lookup failed: {str(e)}"}), 400
 
-@app.route('/herb-pred/predict', methods=['POST'])
+@app.route('/herbipred/predict', methods=['POST'])
 def predict():
     smiles = request.json.get("smiles")
     if not smiles: return jsonify({"error": "No SMILES provided"}), 400
@@ -362,7 +362,7 @@ def predict():
     if err: return jsonify(err), 400
     return jsonify(res)
 
-@app.route('/herb-pred/predict_batch', methods=['POST'])
+@app.route('/herbipred/predict_batch', methods=['POST'])
 def predict_batch():
     smiles_list = request.json.get("smiles_list", [])
     if not smiles_list: return jsonify({"error": "No SMILES list provided"}), 400
@@ -381,7 +381,7 @@ def predict_batch():
 
 if __name__ == '__main__':
     app.run(
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=9000,
         debug=True,
         use_reloader=True
