@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set active_page = 'help' %}
 
-{% block title %}Help - HerbiPred{% endblock %}
+{% block title %}Help - HAPS{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -89,8 +89,13 @@
     <div class="help-section">
         <h3>Understanding and Interpreting the Results</h3>
         <ul>
-            <li><strong>Feature Contributions</strong> - the DONUT chart shows which MACCS structural keys had the most impact on the prediciton. The chart is color coded as green for fingerprints supporting herbicidal prediction and red for fingerprints supporting not-herbicide prediction.</li>
-
+            
+<li><strong>SHAP analysis </strong> - The SHAP analysis indicates the top 20 important fingerprints in the prediction and the association of fingerprints with herbicidal compounds.</li>
+        </ul> 
+ <img src="{{ url_for('static', filename='../static/images/SHAP.png') }}" alt="SHAP"
+            class="help-image">
+<ul>
+    <li><strong>Feature Contributions</strong> - the DONUT chart shows which MACCS structural keys had the most impact on the prediciton. The chart is color coded as green for fingerprints supporting herbicidal prediction and red for fingerprints supporting not-herbicide prediction.</li>
             <li><strong>Molecular Properties Profile</strong> - Radar chart of key descriptors (molecular weight, LogP,
                 H-bond donors/acceptors, TPSA, rotatable bonds).</li>
 

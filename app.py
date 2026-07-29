@@ -7,7 +7,7 @@ from waitress import serve
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
-app = Flask(__name__, static_url_path='/herbipred/static')
+app = Flask(__name__, static_url_path='/haps/static')
 
 # --- VISITOR TRACKING CONFIGURATION ---
 app.secret_key = 'super_secret_key_change_me_in_production'  # Required for sessions
@@ -156,7 +156,7 @@ def get_prediction(smiles):
         print(traceback.format_exc())
         return None, {"error": f"Prediction error: {str(e)}"}
 
-@app.route('/herbipred/')
+@app.route('/haps/')
 def index():
     today_record, total_visitors = get_visitor_stats()
     
@@ -340,19 +340,19 @@ MACCS_KEYS = [
     (166, "FRAGMENTS", "General molecular fragments"),
 ]
 
-@app.route('/herbipred/keys')
+@app.route('/haps/keys')
 def keys():
     return render_template('keys.html', keys=MACCS_KEYS)
 
-@app.route('/herbipred/about')
+@app.route('/haps/about')
 def about():
     return render_template('about.html')
 
-@app.route('/herbipred/help')
+@app.route('/haps/help')
 def help_page():
     return render_template('help.html')
 
-@app.route('/herbipred/pubchem/<int:cid>')
+@app.route('/haps/pubchem/<int:cid>')
 def pubchem_lookup(cid):
     import urllib.request, json as json_mod
     try:
@@ -370,7 +370,7 @@ def pubchem_lookup(cid):
     except Exception as e:
         return jsonify({"error": f"PubChem lookup failed: {str(e)}"}), 400
 
-@app.route('/herbipred/predict', methods=['POST'])
+@app.route('/haps/predict', methods=['POST'])
 def predict():
     smiles = request.json.get("smiles")
     if not smiles: return jsonify({"error": "No SMILES provided"}), 400
@@ -378,7 +378,7 @@ def predict():
     if err: return jsonify(err), 400
     return jsonify(res)
 
-@app.route('/herbipred/predict_batch', methods=['POST'])
+@app.route('/haps/predict_batch', methods=['POST'])
 def predict_batch():
     smiles_list = request.json.get("smiles_list", [])
     if not smiles_list: return jsonify({"error": "No SMILES list provided"}), 400
@@ -400,9 +400,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         
-    app.run(
-        host="0.0.0.0",
-        port=9000,
-        debug=True,
-        use_reloader=True
-    )
+    serve(app, host="0.0.0.0", port=9000)
